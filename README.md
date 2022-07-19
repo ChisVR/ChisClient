@@ -8,9 +8,9 @@ A Heavily modified ReModCE with a loads of new features and modified to use the 
 
 If you want a feature or have a bug report, head over to the issues page and create an issue for it!  
 
-NOTE: Avatar Fav lists is auto set to Ares FAv Servers API, donw line few updates. we be changing that path to our own Avatar Fav System.
+NOTE: Avatar Fav lists is auto set to Ares FAV Servers API, down line few updates. we be changing that path to our own Avatar Fav System.
 
-Right now do not save a lot Avatars, because when our API gets made for it. all avatars will dispear and not good like fully gone. always syats with ares mod but our API be made so you might have to Refavrate everything again.
+Right now do not save a lot Avatars, because when our API gets made for it. all avatars will dispear and not fully gone for good. always stays with ares mod but our API be made so you might have to Re-Fav everything again.
 
 So far we have our own Custom Nametags API made but more gettign worksed on like adding `IK Tweeks`, `Totally Whosome Intergration` and many more.
 
