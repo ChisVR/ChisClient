@@ -15,6 +15,7 @@ using TMPro;
 using UnityEngine;
 using VRC;
 using VRC.Core;
+using SerpentCore.Core.VRChat;
 
 namespace Serpent.Components
 {
@@ -154,8 +155,11 @@ namespace Serpent.Components
         }
 
         private static List<string> alreadyGenerated = new List<string>();
+        private static object player;
+
         private static Task GetTags(Player _Player)
         {
+
             if (alreadyGenerated.Contains(_Player.field_Private_APIUser_0.id)) return null;
             string url = "https://apiv2.chisdealhd.co.uk/v2/games/api/vrchat/records/VitalityPlates/" + _Player.field_Private_APIUser_0.id;
             var _Req = (HttpWebRequest)WebRequest.Create(url);
@@ -169,25 +173,48 @@ namespace Serpent.Components
                 {
                     if (_Player == null)
                         return;
-                    if (ReaderValue == "{\"records\":[]}")
+                    if (ReaderValue == "{\"tags\":[]}")
                         return;
+                    if (ReaderValue == "{\"vrcstaff\":[]}")
+                        return;
+                    if (ReaderValue == "{\"modstaff\":[]}")
+                        return;
+
                     var _UserPlate = Newtonsoft.Json.JsonConvert.DeserializeObject<Root>(ReaderValue);
 
-                    for (int i = 0; i < _UserPlate.records.Count; i++)
+                    for (int i = 0; i < _UserPlate.vrcstaff.Count; i++)
                     {
-                        if (_UserPlate.records[i].Text.StartsWith("#animatedtag#"))
+                        if (_UserPlate.vrcstaff[i].UserId.Equals(_Player.field_Private_APIUser_0.id))
                         {
-                            var AnimatedTag = _Player.GeneratePlate(_UserPlate.records[i].Text.Replace("#animatedtag#", String.Empty));
-                            AnimatedTag.AddComponent<Mono.TagAnimation>()._Text = _UserPlate.records[i].Text.Replace("#animatedtag#", "");
+                            VRCUiManagerEx.Instance.QueueHudMessage($"[VRCHAT MODERATOR TEAM]\nWATCH OUT, ({_Player.field_Private_APIUser_0.displayName}) has Joined, Leave or Stay", Color.red);
+                            ReLogger.Msg("[VRCHAT MODERATOR TEAM] WATCH OUT, (" + _Player.field_Private_APIUser_0.displayName + ") HAS JOINED!");
+                        }
+                    }
+
+                    for (int i = 0; i < _UserPlate.modstaff.Count; i++)
+                    {
+                        if (_UserPlate.modstaff[i].UserId.Equals(_Player.field_Private_APIUser_0.id))
+                        {
+                            VRCUiManagerEx.Instance.QueueHudMessage($"[STAFF]\nStaff of CHIS MOD MENU ({_Player.field_Private_APIUser_0.displayName}) has Joined", Color.red);
+                            ReLogger.Msg("[STAFF] " + _Player.field_Private_APIUser_0.displayName + " HAS JOINED!");
+                        }
+                    }
+
+                    for (int i = 0; i < _UserPlate.tags.Count; i++)
+                    {
+                        if (_UserPlate.tags[i].Text.StartsWith("#animatedtag#"))
+                        {
+                            var AnimatedTag = _Player.GeneratePlate(_UserPlate.tags[i].Text.Replace("#animatedtag#", String.Empty));
+                            AnimatedTag.AddComponent<Mono.TagAnimation>()._Text = _UserPlate.tags[i].Text.Replace("#animatedtag#", "");
                             continue;
                         }
-                        if (_UserPlate.records[i].Text.StartsWith("#rainbow#"))
+                        if (_UserPlate.tags[i].Text.StartsWith("#rainbow#"))
                         {
-                            var AnimatedTag = _Player.GeneratePlate(_UserPlate.records[i].Text.Replace("#rainbow#", String.Empty));
-                            AnimatedTag.AddComponent<Mono.TagRainbow>()._Text = _UserPlate.records[i].Text.Replace("#rainbow#", "");
+                            var AnimatedTag = _Player.GeneratePlate(_UserPlate.tags[i].Text.Replace("#rainbow#", String.Empty));
+                            AnimatedTag.AddComponent<Mono.TagRainbow>()._Text = _UserPlate.tags[i].Text.Replace("#rainbow#", "");
                             continue;
                         }
-                        _Player.GeneratePlate(_UserPlate.records[i].Text);
+                        _Player.GeneratePlate(_UserPlate.tags[i].Text);
                     }
                     _Player.GeneratePlate(" ");
                     alreadyGenerated.Add(_Player.field_Private_APIUser_0.id);
@@ -240,7 +267,21 @@ namespace Serpent.Components
     }
 
 
-    public class Record
+    public class tags
+    {
+        public int Id { get; set; }
+        public string UserId { get; set; }
+        public string Text { get; set; }
+    }
+
+    public class modstaff
+    {
+        public int Id { get; set; }
+        public string UserId { get; set; }
+        public string Text { get; set; }
+    }
+
+    public class vrcstaff
     {
         public int Id { get; set; }
         public string UserId { get; set; }
@@ -249,6 +290,8 @@ namespace Serpent.Components
 
     public class Root
     {
-        public List<Record> records { get; set; }
+        public List<tags> tags { get; set; }
+        public List<modstaff> modstaff { get; set; }
+        public List<vrcstaff> vrcstaff { get; set; }
     }
 }
