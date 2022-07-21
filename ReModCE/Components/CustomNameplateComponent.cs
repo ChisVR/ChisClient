@@ -175,21 +175,10 @@ namespace Serpent.Components
                         return;
                     if (ReaderValue == "{\"tags\":[]}")
                         return;
-                    if (ReaderValue == "{\"vrcstaff\":[]}")
-                        return;
                     if (ReaderValue == "{\"modstaff\":[]}")
                         return;
 
                     var _UserPlate = Newtonsoft.Json.JsonConvert.DeserializeObject<Root>(ReaderValue);
-
-                    for (int i = 0; i < _UserPlate.vrcstaff.Count; i++)
-                    {
-                        if (_UserPlate.vrcstaff[i].UserId.Equals(_Player.field_Private_APIUser_0.id))
-                        {
-                            VRCUiManagerEx.Instance.QueueHudMessage($"[VRCHAT MODERATOR TEAM]\nWATCH OUT, ({_Player.field_Private_APIUser_0.displayName}) has Joined, Leave or Stay", Color.red);
-                            ReLogger.Msg("[VRCHAT MODERATOR TEAM] WATCH OUT, (" + _Player.field_Private_APIUser_0.displayName + ") HAS JOINED!");
-                        }
-                    }
 
                     for (int i = 0; i < _UserPlate.modstaff.Count; i++)
                     {

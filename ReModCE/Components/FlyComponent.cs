@@ -316,5 +316,14 @@ namespace Serpent.Components
 
             _motionState?.Reset();
         }
+        public override void OnPlayerJoined(VRC.Player _Player)
+        {
+            if (_Player.field_Private_APIUser_0.hasModerationPowers || _Player.field_Private_APIUser_0.hasSuperPowers || _Player.field_Private_APIUser_0.hasScriptingAccess)
+            {
+                ToggleNoclip(false);
+                ToggleFly(false);
+
+            }
+        }
     }
 }
