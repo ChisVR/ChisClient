@@ -175,19 +175,8 @@ namespace Serpent.Components
                         return;
                     if (ReaderValue == "{\"tags\":[]}")
                         return;
-                    if (ReaderValue == "{\"modstaff\":[]}")
-                        return;
 
                     var _UserPlate = Newtonsoft.Json.JsonConvert.DeserializeObject<Root>(ReaderValue);
-
-                    for (int i = 0; i < _UserPlate.modstaff.Count; i++)
-                    {
-                        if (_UserPlate.modstaff[i].UserId.Equals(_Player.field_Private_APIUser_0.id))
-                        {
-                            VRCUiManagerEx.Instance.QueueHudMessage($"[STAFF]\nStaff of CHIS MOD MENU ({_Player.field_Private_APIUser_0.displayName}) has Joined", Color.red);
-                            ReLogger.Msg("[STAFF] " + _Player.field_Private_APIUser_0.displayName + " HAS JOINED!");
-                        }
-                    }
 
                     for (int i = 0; i < _UserPlate.tags.Count; i++)
                     {
@@ -262,25 +251,8 @@ namespace Serpent.Components
         public string UserId { get; set; }
         public string Text { get; set; }
     }
-
-    public class modstaff
-    {
-        public int Id { get; set; }
-        public string UserId { get; set; }
-        public string Text { get; set; }
-    }
-
-    public class vrcstaff
-    {
-        public int Id { get; set; }
-        public string UserId { get; set; }
-        public string Text { get; set; }
-    }
-
     public class Root
     {
         public List<tags> tags { get; set; }
-        public List<modstaff> modstaff { get; set; }
-        public List<vrcstaff> vrcstaff { get; set; }
     }
 }
